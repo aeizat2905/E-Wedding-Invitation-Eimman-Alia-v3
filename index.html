@@ -862,26 +862,34 @@ section { padding:54px 20px; }
       <h2 class="section-title">Sahkan Kehadiran</h2>
       <p class="section-body">Mohon sahkan kehadiran sebelum <strong style="color:var(--text);">20 Jun 2026</strong>.</p>
       <form class="rsvp-form" id="rsvpForm" onsubmit="submitRSVP(event)">
-        <div class="form-group"><label>Nama Penuh</label><input type="text" placeholder="Masukkan nama anda" required></div>
-        <div class="form-group"><label>No. Telefon</label><input type="tel" placeholder="0xx-xxxxxxx"></div>
-        <div class="form-group"><label>Kehadiran</label>
-          <select required>
-            <option value="">Pilih...</option>
-            <option value="ya">✅ Ya, saya hadir</option>
-            <option value="tidak">❌ Maaf, tidak dapat hadir</option>
-            <option value="mungkin">🤔 Mungkin hadir</option>
+  	<div class="form-group"><label>Nama Penuh</label><input type="text" placeholder="Masukkan nama anda" required></div>
+ 	<div class="form-group"><label>No. Telefon</label><input type="tel" placeholder="0xx-xxxxxxx"></div>
+ 	<div class="form-group"><label>Jemputan Daripada Pihak</label>
+    	  <select required>
+      	    <option value="">Pilih pihak...</option>
+            <option value="Eimman">🤵 Pihak Eimman</option>
+            <option value="Alia">👰 Pihak Alia</option>
+            <option value="Keluarga">👨‍👩‍👧‍👦 Keluarga Terdekat</option>
           </select>
-        </div>
-        <div class="form-group"><label>Bilangan Tetamu</label>
-          <select>
-            <option value="1">1 orang</option><option value="2">2 orang</option>
-            <option value="3">3 orang</option><option value="4">4 orang</option>
+  	</div>
+  	<div class="form-group"><label>Kehadiran</label>
+    	  <select required>
+      	    <option value="">Pilih...</option>
+            <option value="Hadir">✅ Ya, saya hadir</option>
+            <option value="Tidak Hadir">❌ Maaf, tidak dapat hadir</option>
+            <option value="Mungkin">🤔 Mungkin hadir</option>
+          </select>
+  	</div>
+  	<div class="form-group"><label>Bilangan Tetamu</label>
+    	  <select>
+      	    <option value="1">1 orang</option><option value="2">2 orang</option>
+      	    <option value="3">3 orang</option><option value="4">4 orang</option>
             <option value="5+">5 orang ke atas</option>
           </select>
-        </div>
-        <div class="form-group"><label>Ucapan (pilihan)</label><textarea rows="3" placeholder="Tinggalkan ucapan untuk pengantin..."></textarea></div>
-        <button type="submit" class="rsvp-btn">✦ Hantar Maklum Balas ✦</button>
-      </form>
+  	</div>
+  	<div class="form-group"><label>Ucapan (pilihan)</label><textarea rows="3" placeholder="Tinggalkan ucapan untuk pengantin..."></textarea></div>
+      <button type="submit" class="rsvp-btn">✦ Hantar Maklum Balas ✦</button>
+</form>
       <div class="rsvp-success" id="rsvpSuccess">🌸 Terima kasih! Maklum balas anda telah diterima. Kami menanti kehadiran anda!</div>
     </div>
   </div>
@@ -1098,13 +1106,13 @@ function submitRSVP(e) {
   var btn = form.querySelector('.rsvp-btn');
   var inputs = form.querySelectorAll('input, select, textarea');
   
-  var nama = inputs[0].value.trim();
-  var telefon = inputs[1].value.trim();
-  var kehadiran = inputs[2].value;
-  var bilangan = inputs[3].value;
-  var ucapan = inputs[4].value.trim();
+  var nama     = inputs[0].value.trim();
+  var telefon  = inputs[1].value.trim();
+  var pihak    = inputs[2].value;   // NEW field
+  var kehadiran= inputs[3].value;
+  var bilangan = inputs[4].value;
+  var ucapan   = inputs[5].value.trim();
   
-  // Disable button while submitting
   btn.textContent = '⏳ Menghantar...';
   btn.style.opacity = '0.7';
   btn.disabled = true;
@@ -1113,6 +1121,7 @@ function submitRSVP(e) {
     action: 'addRSVP',
     nama: nama,
     telefon: telefon,
+    pihak: pihak,
     kehadiran: kehadiran,
     bilangan: bilangan,
     ucapan: ucapan,
@@ -1126,21 +1135,14 @@ function submitRSVP(e) {
     body: JSON.stringify(data)
   })
   .then(function() {
-    // no-cors won't return readable response, assume success
     form.style.display = 'none';
     document.getElementById('rsvpSuccess').style.display = 'block';
-    // Reload wishes after a short delay so new ucapan appears
-    if (ucapan) {
-      setTimeout(function() { loadWishes(); }, 2000);
-    }
+    if (ucapan) { setTimeout(function() { loadWishes(); }, 2000); }
   })
   .catch(function() {
-    // Still show success (no-cors may cause catch even on success)
     form.style.display = 'none';
     document.getElementById('rsvpSuccess').style.display = 'block';
-    if (ucapan) {
-      setTimeout(function() { loadWishes(); }, 2000);
-    }
+    if (ucapan) { setTimeout(function() { loadWishes(); }, 2000); }
   });
 }
 </script>
